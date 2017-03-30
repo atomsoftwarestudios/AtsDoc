@@ -51,11 +51,9 @@
   <ItemGroup>
     <Content Include="test\project\tsconfig.json" />
     <Content Include="test\tsconfig.json" />
-    <Content Include="LICENSE" />
     <Content Include="tsconfig.json" />
     <TypeScriptCompile Include="atsdoc.ts" />
     <Content Include="package.json" />
-    <Content Include="README.md" />
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="test\classes\classes-inheritance.ts" />
     <TypeScriptCompile Include="test\classes\classes.ts" />
