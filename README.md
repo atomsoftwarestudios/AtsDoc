@@ -52,7 +52,7 @@ for details) except those directing the compiler how to output the transpilled c
 Additionally the following parameters are available:
 
 Option                   | Parameters         | Descritption
--------------------------|--------------------------
+------------------------ | ------------------ | ------------
 --help                   |                    | Prints the usage screen
 --version                |                    | Prints version of the AtsDoc, TypeScript Compiler and TSLint in use
 --includeDefinitionFiles |                    | Directs the atsdoc to include AST nodes from all .d.ts files used by the program being documented
@@ -61,7 +61,7 @@ Option                   | Parameters         | Descritption
 **Planned parameters**
 
 Option                   | Parameters         | Descritption
--------------------------|----------------------------------------------------
+------------------------ | ------------------ | ------------
 --programName            |                    | Specified the root node name
 --programKind [kind]     | program<br>library | Specifies if the source code is a stanalone program or a library
 --includeSourceFileNodes |                    | Specifies if the source file nodes will be included in the program
