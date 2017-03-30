@@ -78,7 +78,7 @@ For known bugs please reffer to [reported issues](https://github.com/atomsoftwar
 
 ### License
 
-See the [License]{./LICENSE} file for details.
+See the [License](https://github.com/atomsoftwarestudios/AtsDoc/blob/master/LICENSE) file for details.
 
 ### Contribution
 
