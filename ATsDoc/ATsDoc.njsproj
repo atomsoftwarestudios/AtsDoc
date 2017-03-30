@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <Name>ATsDoc</Name>
+    <RootNamespace>ATsDoc</RootNamespace>
+    <ScriptArguments>
+    </ScriptArguments>
+    <NodeExePath>
+    </NodeExePath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>3003d3e9-881b-4a1a-a0e7-f9ccc86b721d</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>./dist/atsdoc.js</StartupFile>
+    <StartWebBrowser>False</StartWebBrowser>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>CommonJS</TypeScriptModuleKind>
+    <EnableTypeScript>true</EnableTypeScript>
+    <StartWebBrowser>False</StartWebBrowser>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptTarget>ES5</TypeScriptTarget>
+    <TypeScriptJSXEmit>None</TypeScriptJSXEmit>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
+    <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
+    <TypeScriptOutFile>
+    </TypeScriptOutFile>
+    <TypeScriptOutDir />
+    <TypeScriptGeneratesDeclarations>False</TypeScriptGeneratesDeclarations>
+    <TypeScriptNoEmitOnError>False</TypeScriptNoEmitOnError>
+    <TypeScriptMapRoot />
+    <TypeScriptSourceRoot />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="test\project\tsconfig.json" />
+    <Content Include="test\tsconfig.json" />
+    <Content Include="LICENSE" />
+    <Content Include="tsconfig.json" />
+    <TypeScriptCompile Include="atsdoc.ts" />
+    <Content Include="package.json" />
+    <Content Include="README.md" />
+    <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
+    <TypeScriptCompile Include="test\classes\classes-inheritance.ts" />
+    <TypeScriptCompile Include="test\classes\classes.ts" />
+    <TypeScriptCompile Include="test\functions\function-generic.ts" />
+    <TypeScriptCompile Include="test\functions\function-overloads.ts" />
+    <TypeScriptCompile Include="test\functions\function-this-param.ts" />
+    <TypeScriptCompile Include="test\functions\function-rest-params.ts" />
+    <TypeScriptCompile Include="test\functions\function-default-params.ts" />
+    <TypeScriptCompile Include="test\functions\function-optional-params.ts" />
+    <TypeScriptCompile Include="test\functions\function-params.ts" />
+    <TypeScriptCompile Include="test\functions\function-return.ts" />
+    <TypeScriptCompile Include="test\letvarconst\letvarconst.ts" />
+    <TypeScriptCompile Include="test\modules\module-exports.ts" />
+    <TypeScriptCompile Include="test\modules\module-namespaces.ts" />
+    <TypeScriptCompile Include="test\modules\module-namespace.ts" />
+    <TypeScriptCompile Include="test\project\project-_modab.ts" />
+    <TypeScriptCompile Include="test\project\project-modb.ts" />
+    <TypeScriptCompile Include="test\project\project-moda.ts" />
+    <TypeScriptCompile Include="test\test_complex.ts" />
+    <None Include="test\test1.ts" />
+    <None Include="test\test2.ts" />
+    <TypeScriptCompile Include="test\types\types-boolean.ts" />
+    <TypeScriptCompile Include="test\types\types-intersections.ts" />
+    <TypeScriptCompile Include="test\types\types-arrow-fn.ts" />
+    <TypeScriptCompile Include="test\types\types-object-builtin.ts" />
+    <TypeScriptCompile Include="test\types\types-enums.ts" />
+    <TypeScriptCompile Include="test\types\types-object-literals.ts" />
+    <TypeScriptCompile Include="test\types\types-object-interface.ts" />
+    <TypeScriptCompile Include="test\types\types-unions.ts" />
+    <TypeScriptCompile Include="test\types\types-object-classes.ts" />
+    <TypeScriptCompile Include="test\types\types-basic-arrays.ts" />
+    <TypeScriptCompile Include="test\types\types-basic.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="dist\" />
+    <Folder Include="test\" />
+    <Folder Include="test\functions\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Scripts\typings\" />
+    <Folder Include="Scripts\typings\node\" />
+    <Folder Include="test\modules\" />
+    <Folder Include="test\classes\" />
+    <Folder Include="test\letvarconst\" />
+    <Folder Include="test\project\" />
+    <Folder Include="test\types\" />
+  </ItemGroup>
+  <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
+  <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:48022/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>True</UseCustomServer>
+          <CustomServerUrl>http://localhost:1337</CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}" User="">
+        <WebProjectProperties>
+          <StartPageUrl>
+          </StartPageUrl>
+          <StartAction>CurrentPage</StartAction>
+          <AspNetDebugging>True</AspNetDebugging>
+          <SilverlightDebugging>False</SilverlightDebugging>
+          <NativeDebugging>False</NativeDebugging>
+          <SQLDebugging>False</SQLDebugging>
+          <ExternalProgram>
+          </ExternalProgram>
+          <StartExternalURL>
+          </StartExternalURL>
+          <StartCmdLineArguments>
+          </StartCmdLineArguments>
+          <StartWorkingDirectory>
+          </StartWorkingDirectory>
+          <EnableENC>False</EnableENC>
+          <AlwaysStartWebServerOnDebug>False</AlwaysStartWebServerOnDebug>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

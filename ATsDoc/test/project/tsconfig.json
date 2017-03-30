@@ -1,0 +1,16 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "none",
+    "allowJs": false,
+    "target": "es6",
+    "sourceMap": true,
+    "outFile": "./out.js"
+  },
+  "typingOptions": {
+    "enableAutoDiscovery": false
+  },
+  "include": [
+    "./**/*"
+  ]
+}

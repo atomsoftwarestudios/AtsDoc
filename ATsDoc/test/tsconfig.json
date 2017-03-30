@@ -1,0 +1,21 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "allowJs": false,
+    "target": "es6",
+    "sourceMap": true,
+    "outDir": "./dist"
+  },
+  "typingOptions": {
+    "enableAutoDiscovery": false
+  },
+  "include": [
+    "./**/*"
+  ],
+  "exclude": [
+    "./test_complex.ts",
+    "./test1.ts",
+    "./test2.ts"
+  ]
+}

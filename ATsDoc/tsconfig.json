@@ -1,0 +1,21 @@
+﻿{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "module": "commonjs",
+    "allowJs": false,
+    "target": "es6",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "noEmit": true
+  },
+  "typingOptions": {
+    "enableAutoDiscovery": false
+  },
+  "include": [
+    "./atsdoc.ts"
+  ],
+  "exclude": [
+    "./node_modules/*",
+    "./test/**/*"
+  ]
+}
