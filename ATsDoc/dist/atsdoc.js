@@ -405,6 +405,9 @@ var atsdoc;
                 }
             }
         }
+        else {
+            atsType.name = checker.typeToString(t);
+        }
         // object flags
         if (t.objectFlags) {
             atsType.objectFlags = t.objectFlags;
