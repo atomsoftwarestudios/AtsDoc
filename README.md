@@ -19,14 +19,12 @@ Released under the MIT License
 
 ### Introduction
 
-ATsDoc is a Node.js command line utility using the TypeScript API to AST tree nodes from the TypeScript
-program and exports the program nodes including the documentation to the JSON file consumable by the
+ATsDoc is a Node.js command line utility designed to extract the TypeScript AST tree including the documentation to the JSON file consumable by the
 [AjsDoc](https://github.com/atomsoftwarestudios/AjsDoc/).
 
-It is designed to be transparent to the TypeScript compiler and it sshould not be a problem to switch to new
-version of it if there will not be any breaking changes in the API itself.
+The extractor isusing the TypeScript compiler API to extract the AST tree and is designed to be transparent to the TypeScript compiler and it should not be a problem to switch to new version of the compiler if there will not be any breaking changes in the API itself.
 
-AtsDoc also uses the TSLint and warns for potential problems and coding issues.
+AtsDoc also uses the TSLint to warn against potential coding style problems.
 
 Currently, its not included to the NPM repository.
 
@@ -39,14 +37,14 @@ Prior the AtsDoc will be published through the NPM the following procedure is ab
 clone the project and open in Visual Studio (this will ensure all required dependencies such as TSLint
 and TypeScript will be installed from NPM)
 
-To run the code:
+To run the code use the following command:
 ```
 node [path-to-vs-project-dir]\dist\atsdoc.js <params> <files|dir>
 ```
 
 **TypeScript Compiler Parameters**
 
-It is possible almost all available tsc parameters (see [Compiler Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
+It is possible to pass almost all available tsc parameters (see [Compiler Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
 for details) except those directing the compiler how to output the transpilled code.
 
 Additionally the following parameters are available:
@@ -63,7 +61,7 @@ Option                   | Parameters         | Descritption
 Option                   | Parameters         | Descritption
 ------------------------ | ------------------ | ------------
 --programName            |                    | Specified the root node name
---programKind [kind]     | program<br>library | Specifies if the source code is a stanalone program or a library
+--programKind [kind]     | program<br>library<br>module | Specifies if the source code is a stanalone program or a library
 --includeSourceFileNodes |                    | Specifies if the source file nodes will be included in the program
 --tslintOut              |                    | Specifies the file where log from TSLint will be stored
 
