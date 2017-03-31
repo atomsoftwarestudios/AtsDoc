@@ -61,7 +61,7 @@ Option                   | Parameters         | Descritption
 Option                   | Parameters         | Descritption
 ------------------------ | ------------------ | ------------
 --programName            |                    | Specified the root node name
---programKind [kind]     | program<br>library | Specifies if the source code is a stanalone program or a library
+--programKind [kind]     | program<br>library<br>module | Specifies if the source code is a stanalone program or a library
 --includeSourceFileNodes |                    | Specifies if the source file nodes will be included in the program
 --tslintOut              |                    | Specifies the file where log from TSLint will be stored
 
