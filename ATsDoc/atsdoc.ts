@@ -535,6 +535,8 @@ namespace atsdoc {
                     }
                 }
             }
+        } else {
+            atsType.name = checker.typeToString(t);
         }
 
         // object flags
