@@ -49,7 +49,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="test\project\tsconfig.json" />
     <Content Include="test\tsconfig.json" />
     <Content Include="tsconfig.json" />
     <TypeScriptCompile Include="atsdoc.ts" />
