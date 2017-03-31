@@ -1,12 +1,32 @@
-﻿namespace classes {
+﻿/**
+ * This is a short description of the classes namespace
+ * This is a long description of the classes namespace
+ */
+namespace classes {
 
+    /**
+     * This is a short description of the t namespace
+     * This is a long description of the t namespace
+     */
     namespace t {
 
+       /**
+        * This is a short description of the q namespace
+        * This is a long description of the q namespace
+        */
         export namespace q {
 
+            /**
+             * This is a short description of the C class
+             * This is a long description of the C class
+             */
             export class C {
             }
 
+            /**
+             * This is a short description of the IA interface
+             * This is a long description of the IA interface
+             */
             export interface IA {
             }
         }
