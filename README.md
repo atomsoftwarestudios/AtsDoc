@@ -37,14 +37,14 @@ Prior the AtsDoc will be published through the NPM the following procedure is ab
 clone the project and open in Visual Studio (this will ensure all required dependencies such as TSLint
 and TypeScript will be installed from NPM)
 
-To run the code:
+To run the code use the following command:
 ```
 node [path-to-vs-project-dir]\dist\atsdoc.js <params> <files|dir>
 ```
 
 **TypeScript Compiler Parameters**
 
-It is possible almost all available tsc parameters (see [Compiler Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
+It is possible to pass almost all available tsc parameters (see [Compiler Options](https://www.typescriptlang.org/docs/handbook/compiler-options.html)
 for details) except those directing the compiler how to output the transpilled code.
 
 Additionally the following parameters are available:
