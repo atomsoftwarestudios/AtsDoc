@@ -19,14 +19,12 @@ Released under the MIT License
 
 ### Introduction
 
-ATsDoc is a Node.js command line utility using the TypeScript API to AST tree nodes from the TypeScript
-program and exports the program nodes including the documentation to the JSON file consumable by the
+ATsDoc is a Node.js command line utility designed to extract the TypeScript AST tree including the documentation to the JSON file consumable by the
 [AjsDoc](https://github.com/atomsoftwarestudios/AjsDoc/).
 
-It is designed to be transparent to the TypeScript compiler and it sshould not be a problem to switch to new
-version of it if there will not be any breaking changes in the API itself.
+The extractor isusing the TypeScript compiler API to extract the AST tree and is designed to be transparent to the TypeScript compiler and it should not be a problem to switch to new version of the compiler if there will not be any breaking changes in the API itself.
 
-AtsDoc also uses the TSLint and warns for potential problems and coding issues.
+AtsDoc also uses the TSLint to warn against potential coding style problems.
 
 Currently, its not included to the NPM repository.
 
