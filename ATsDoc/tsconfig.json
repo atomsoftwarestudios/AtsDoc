@@ -6,16 +6,12 @@
     "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
-    "noEmit": true
+    "noEmit": false
   },
   "typingOptions": {
     "enableAutoDiscovery": false
   },
   "include": [
     "./atsdoc.ts"
-  ],
-  "exclude": [
-    "./node_modules/*",
-    "./test/**/*"
   ]
 }
