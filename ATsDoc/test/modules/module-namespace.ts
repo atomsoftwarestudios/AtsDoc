@@ -1,6 +1,5 @@
 ﻿namespace module_namespace {
 
-
     namespace ns {
     }
 

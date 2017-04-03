@@ -5,7 +5,7 @@
 
     /** Enum 3 */
     enum Enum3 {
-        /** 
+        /**
          * A = 1,
          * This is a long A1 comment
          */

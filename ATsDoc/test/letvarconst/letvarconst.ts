@@ -1,7 +1,7 @@
 ﻿namespace letvarconst {
 
-    let a: number = 1
-    let a1
+    let a: number = 1;
+    let a1;
 
     var b: number = 1;
     var b1;

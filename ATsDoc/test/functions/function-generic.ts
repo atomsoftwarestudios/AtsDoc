@@ -7,8 +7,29 @@
     class C {
     }
 
+    /**
+     * Short
+     * Long
+     * @param s param s
+     * @param cb param cb
+     * @param K param K
+     * @param I param I
+     */
     declare function fn1<K, I>(s: K, cb: I): K;
-    function fn1_2<K, I>(s: K, cb: I): K { return null };
+
+    /**
+     *
+     * @param s
+     * @param cb
+     */
+    function fn1_2<K, I>(s: K, cb: I): K {
+        return null;
+    }
+
+    /**
+     * Variable J short
+     * Variable J long
+     */
     let j: <K, I>(s: K, cb: I) => K;
 
     declare function fn2<T extends IName>(s: T): T;
@@ -16,7 +37,6 @@
     declare function fn3<K, I extends keyof K>(s: K, cb: I): void;
 
     declare function fn4<T>(t: { new (): T; }): T;
-
 
     /**
      * mother of all functions

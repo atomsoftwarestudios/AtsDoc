@@ -3,14 +3,17 @@
     namespace test {
 
         export interface Ii1 {
+            /** Name member */
             name: string;
         }
 
         export interface Ii2 {
+            /** Street member */
             street: string;
         }
 
         export class C1 {
+            /** Name member */
             name: string;
         }
 
@@ -22,12 +25,14 @@
      * Undefined type of return value
      */
     function testfn() {
+        // empty
     }
 
     /**
      * Void return value
      */
     function testfn1(): void {
+        // empty
     }
 
     /**
@@ -104,7 +109,7 @@
     /**
      * Intersestion / Union
      * @returns Intersestion / Union
-     */    
+     */
     function testfn12(): t.Ii1 & t.Ii2 | string {
         return "";
     }
@@ -116,7 +121,8 @@
     function testfn13(): string | ((a: number) => void) | boolean {
 
         return (n: number) => {
-        }
+            // empty
+        };
 
     }
 

@@ -18,7 +18,6 @@
             (a: T): T;
         }
 
-
     }
 
     import t = test;

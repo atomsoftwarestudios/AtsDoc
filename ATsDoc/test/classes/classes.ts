@@ -33,16 +33,16 @@ namespace classes {
 
     }
 
-
-    export abstract class abstr {
+    export abstract class Abstr {
     }
 
-    export class Hovno<T> {
+    export class A<T> {
 
-        public constructor(h: abstr) {
+        public constructor(h: Abstr) {
+            // empty
         }
 
-        private __a: string = ""
+        private __a: string = "";
 
         private readonly __b: string = "";
 
@@ -58,19 +58,49 @@ namespace classes {
 
         readonly bb: number;
 
+        /**
+         * Get accessor aaa short
+         * Get accessor aaa long
+         */
         public get aaa(): number { return 1; }
 
-        public set aaa(value: number) { }
+        /**
+         * Set accessor aaa short
+         * Set accessor aaa long
+         * @param value value to be set
+         */
+        public set aaa(value: number) {
+            // empty
+        }
 
         public static aaaa;
 
+        /**
+         * m1 short
+         * m1 long
+         * @param num Param doc
+         * @returns void
+         */
         m1(num: string): void {
+            // empty
         }
 
+        /**
+         * m2 short
+         * m2 long
+         * @param num Param doc
+         * @returns converted number to string
+         */
         public m2(num: string): string {
             return "";
         }
 
+        /**
+         * m3 short
+         * m3 long
+         * @param num Param doc
+         * @returns random string
+         */
         public static m3(num: string): string {
             return "";
         }
@@ -91,6 +121,5 @@ namespace classes {
 
     class D extends qq.C  implements qq.IA, IA, IB {
     }
-
 
 }
