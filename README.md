@@ -55,8 +55,8 @@ Option                   | Parameters         | Descritption
 --version                |                    | Prints version of the AtsDoc, TypeScript Compiler and TSLint in use
 --includeDefinitionFiles |                    | Directs the atsdoc to include AST nodes from all .d.ts files used by the program being documented
 --jsonFile               | \<filename>        | Output json filename. If not specified the stdout is used instead
---rootNodeName           | \<name>            | Specified the root node name (default Program)
---rootNodeKind           | \<name>            | Specifies the kinf of the root node to be set (default Program)
+--rootNodeName           | \<name>            | Specifies the root node name (default name is Program)
+--rootNodeKind           | \<name>            | Specifies the kinf of the root node to be set (default name is Program)
 
 **Planned parameters**
 
