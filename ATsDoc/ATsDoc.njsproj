@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>ATsDoc</Name>
     <RootNamespace>ATsDoc</RootNamespace>
-    <ScriptArguments>-t es6 ./test//classes/classes-static.ts --rootNodeName testName --rootNodeKind testKind</ScriptArguments>
+    <ScriptArguments>-t es6 ./test/classes/classes-constructors.ts --m commonjs --rootNodeName testName --rootNodeKind testKind --rootPath ./test</ScriptArguments>
     <NodeExePath>
     </NodeExePath>
   </PropertyGroup>
@@ -89,6 +89,7 @@
     <None Include="test\types\types-object-classes.ts" />
     <None Include="test\types\types-basic-arrays.ts" />
     <None Include="test\types\types-basic.ts" />
+    <TypeScriptCompile Include="test\classes\classes-constructors.ts" />
     <TypeScriptCompile Include="test\classes\classes-static.ts" />
     <TypeScriptCompile Include="test\doc\functions.ts" />
   </ItemGroup>
@@ -108,6 +109,7 @@
     <Folder Include="test\classes\" />
     <Folder Include="test\letvarconst\" />
     <Folder Include="test\doc\" />
+    <Folder Include="test\interfaces\" />
     <Folder Include="test\project\" />
     <Folder Include="test\types\" />
   </ItemGroup>

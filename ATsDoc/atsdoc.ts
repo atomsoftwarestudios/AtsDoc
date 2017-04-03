@@ -55,6 +55,8 @@ namespace atsdoc {
         logToConsole?: boolean;
         /** outout json file */
         jsonFile?: string;
+        /** root path to the project */
+        rootPath?: string;
         /** renames root node name to the name passed from the console */
         rootNodeName?: string;
         /** sets the root node kind string to valie passed from console */
@@ -87,6 +89,9 @@ namespace atsdoc {
 
     // parsed atsdoc configuration
     let atsdocConfig: IAtsdocConfig;
+
+    // specifies if source files will be included in the output
+    let includeSources: boolean = false;
 
     // parsed tsc command line parameters
     let tscCommandLine: ts.ParsedCommandLine;
@@ -127,8 +132,8 @@ namespace atsdoc {
         log("Syntax: atsdoc [options] [file ...]|<-p projectPath>");
         log("");
         log("Examples: atsdoc hello.ts");
-        log("          atsdoc --p ./tsproject/tsconfig.json");
-        log("          atsdoc ./tsfiles/tsfile.ts --jsonFile file.json");
+        log("          atsdoc --rootPath ./tsproject --p ./tsproject/tsconfig.json");
+        log("          atsdoc --rootPath ./tsfiles ./tsfiles/tsfile.ts --jsonFile file.json");
         log("");
         log("--help                                  Prints this help");
         log("--version                               Prints version");
@@ -152,6 +157,7 @@ namespace atsdoc {
         log("");
         log("ATsDoc configuration options:");
         log("");
+        log("   --rootPath                               Used to determine relative path to .ts files. Must be used otherwise links are wrong");
         log("   --includeDefinitionFiles                 Includes definitions from definition files in use to the output");
         log("   --rootNodeName <name>                    Renames root node from 'program' to passed value");
         log("   --rootNodeKind <program|library|module>  Sets kind of the root node to passed value");
@@ -303,7 +309,7 @@ namespace atsdoc {
 
             // prepare tsconfig to be loaded
 
-            const fileOrDirectory: string = nodepath.normalize(tscCommandLine.options.project);
+            const fileOrDirectory: string = nodepath.resolve(tscCommandLine.options.project);
 
             if (!fileOrDirectory /* current directory "." */ || directoryExists(fileOrDirectory)) {
 
@@ -452,10 +458,11 @@ namespace atsdoc {
         ts.SyntaxKind.FunctionDeclaration,
         ts.SyntaxKind.MethodDeclaration,
         ts.SyntaxKind.TypeParameter,
-        ts.SyntaxKind.VariableDeclaration,
+        ts.SyntaxKind.VariableStatement,
         ts.SyntaxKind.EnumDeclaration,
         ts.SyntaxKind.InterfaceDeclaration,
         ts.SyntaxKind.ClassDeclaration,
+        ts.SyntaxKind.Constructor,
         ts.SyntaxKind.CallSignature,
         ts.SyntaxKind.EnumMember
         // ts.SyntaxKind.ImportEqualsDeclaration
@@ -575,9 +582,17 @@ namespace atsdoc {
         if (anyNode.hasOwnProperty("symbol")) {
             let n: any = anyNode;
             while (n !== null) {
-                if (n.symbol && n.symbol.name) {
-                    fqdn = fqdn === "" ? n.symbol.name : n.symbol.name + "." + fqdn;
+                if (n.kind === ts.SyntaxKind.SourceFile && includeSources) {
+                    if (n.fileName) {
+                        let fn: string = nodepath.resolve(n.fileName).substr(atsdocConfig.rootPath.length).replace(/\\/g, "/");
+                        fqdn = fqdn === "" ? fn : fn + "/" + fqdn;
+                    }
+                } else {
+                    if (n.symbol && n.symbol.name) {
+                        fqdn = fqdn === "" ? n.symbol.name : n.symbol.name + "." + fqdn;
+                    }
                 }
+
                 if (n.symbol && n.symbol.declarations && n.symbol.declarations[0] && n.symbol.declarations[0].parent) {
                     n = n.symbol.declarations[0].parent;
                 } else {
@@ -589,6 +604,7 @@ namespace atsdoc {
                 }
             }
         }
+
         if (fqdn !== "") {
             return fqdn;
         } else {
@@ -848,6 +864,13 @@ namespace atsdoc {
                 if (p.questionToken) {
                     an.optional = true;
                 }
+
+                // - Constructor is special case, add constructor name and fqdn
+                if (p.kind === ts.SyntaxKind.Constructor) {
+                    an.name = "constructor";
+                    an.fqdn = getFqdn(p);
+                }
+
                 atsNode.children.push(an);
             }
         }
@@ -901,6 +924,7 @@ namespace atsdoc {
         if (anyNode.initializer) {
             if (anyNode.kind === ts.SyntaxKind.EnumMember ||
                 anyNode.kind === ts.SyntaxKind.Parameter ||
+                anyNode.kind === ts.SyntaxKind.VariableStatement ||
                 anyNode.kind === ts.SyntaxKind.VariableDeclaration) {
                 atsNode.initializer = anyNode.initializer.getText();
             }
@@ -936,19 +960,19 @@ namespace atsdoc {
 
         // let, var or const
 
-        if (anyNode.kind === ts.SyntaxKind.VariableDeclaration) {
+        if (anyNode.kind === ts.SyntaxKind.VariableStatement) {
             let ps: string = anyNode.parent.getFullText();
             atsNode.atsNodeFlags = atsNode.atsNodeFlags || 0;
             /* tslint:disable */
-            if (ps.indexOf("let") !== -1) {
+            if (ps.indexOf("let ") !== -1) {
                 atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.let;
                 delete atsNode.initializer;
             }
-            if (ps.indexOf("var") !== -1) {
+            if (ps.indexOf("var ") !== -1) {
                 atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.var;
                 delete atsNode.initializer;
             }
-            if (ps.indexOf("const") !== -1) atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.const;
+            if (ps.indexOf("const ") !== -1) atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.const;
             /* tslint:denable */
         }
 
@@ -980,7 +1004,8 @@ namespace atsdoc {
             files: []
         };
 
-        n.files.push({ file: file.fileName + ":" + (pos.line + 1) + ":" + (pos.character + 1) });
+        let fn: string = nodepath.resolve(file.fileName).substr(atsdocConfig.rootPath.length).replace(/\\/g, "/");
+        n.files.push({ file: fn + ":" + (pos.line + 1) + ":" + (pos.character + 1) });
 
         return n;
     }
@@ -1077,6 +1102,21 @@ namespace atsdoc {
             // convert the node to atsdoc format
             collectNodeData(node, atsNode);
 
+            // - VariableStatement is special case and VariableDeclaration need to be merged to it if exists
+            if (node.kind === ts.SyntaxKind.VariableStatement) {
+                for (let ch of (<any>node)._children) {
+                    if (ch.kind === ts.SyntaxKind.VariableDeclarationList && ch.declarations.length > 0) {
+                        collectNodeData(ch.declarations[0], atsNode);
+                    }
+                }
+            }
+
+            // - Constructor is special case, add constructor name and fqdn
+            if (node.kind === ts.SyntaxKind.Constructor) {
+                atsNode.name = "constructor";
+                atsNode.fqdn = getFqdn(node);
+            }
+
             // add converted node to parent
             let n: IATsDocNode = mergeAtsNodes(parentAtsNode, atsNode);
 
@@ -1172,18 +1212,17 @@ namespace atsdoc {
     function lintts(program: ts.Program): void {
 
         // tslint path
-        let tslintDir: string = "./node_modules/tslint/";
-
+        let tslintDir: string = nodepath.resolve(__dirname + "/../node_modules/tslint/");
         // initialize linter
         let tsLintOptions: tslint.ILinterOptions = {
-            rulesDirectory: nodepath.resolve(nodepath.normalize(tslintDir + "/lib/rules")),
-            formattersDirectory: nodepath.resolve(nodepath.normalize(tslintDir + "/lib/formatters")),
+            rulesDirectory: nodepath.resolve(tslintDir + "/lib/rules"),
+            formattersDirectory: nodepath.resolve(tslintDir + "/lib/formatters"),
             formatter: "json",
             fix: false
         };
 
         // load recommended tslint config
-        let configPath: string = nodepath.resolve(nodepath.normalize(tslintDir + "/lib/configs/recommended.js"));
+        let configPath: string = nodepath.resolve(tslintDir + "/lib/configs/recommended.js");
         let tsLintConfig: tslint.Configuration.IConfigurationFile = tslint.Configuration.loadConfigurationFromPath(configPath);
 
         // rewrite some rules
@@ -1205,7 +1244,7 @@ namespace atsdoc {
         let linter: tslint.Linter = new tslint.Linter(tsLintOptions, program);
         for (let sourceFile of program.getSourceFiles()) {
             if (!sourceFile.isDeclarationFile) {
-                log("Linting file %s", sourceFile.fileName);
+                // log("Linting file %s", sourceFile.fileName);
                 linter.lint(sourceFile.fileName, sourceFile.getFullText(), tsLintConfig);
                 lintResults.push(linter.getResult());
             }
@@ -1273,6 +1312,8 @@ namespace atsdoc {
             atsDocRootNode.name = atsdocConfig.rootNodeName;
         }
 
+        includeSources = options.outFile === undefined;
+
         // go through all configured files and visit each ts.node
         for (const sourceFile of program.getSourceFiles()) {
 
@@ -1280,15 +1321,19 @@ namespace atsdoc {
 
                 log("Processing file %s", sourceFile.fileName);
 
-                if (options.outFile === undefined) {
+                if (includeSources) {
+
+                    let fn: string = nodepath.resolve(sourceFile.fileName).substr(atsdocConfig.rootPath.length).replace(/\\/g, "/");
 
                     // if output is set to single file don't use the program doc node directly but use the file rather
                     let tsFile: IATsDocNode = {
                         kind: sourceFile.kind,
                         kindString: ts.SyntaxKind[sourceFile.kind],
+                        fqdn: fn,
                         files: []
                     };
-                    tsFile.files.push({ file: sourceFile.fileName });
+
+                    tsFile.files.push({ file: fn });
 
                     if (!(atsDocRootNode.children instanceof Array)) {
                         atsDocRootNode.children = [];
@@ -1301,6 +1346,7 @@ namespace atsdoc {
                     childrenVisitor(sourceFile, atsDocRootNode);
                 }
             }
+
         }
 
         let output: string = JSON.stringify(atsDocRootNode, null, 2);
@@ -1374,6 +1420,12 @@ namespace atsdoc {
             cfg.rootNodeName = "Program";
         }
 
+        if (config.rootPath) {
+            cfg.rootPath = config.rootPath;
+        } else {
+            cfg.rootPath = "";
+        }
+
         return cfg;
 
     }
@@ -1428,6 +1480,11 @@ namespace atsdoc {
                     return ReturnCode.Ok;
                 case "--jsonFile":
                     atsdocConfig.jsonFile = args[arg + 1];
+                    arg += 2;
+                    break;
+                case "--rootPath":
+                    atsdocConfig.rootPath = nodepath.resolve(args[arg + 1]);
+                    console.log(atsdocConfig.rootPath);
                     arg += 2;
                     break;
                 case "--rootNodeName":
