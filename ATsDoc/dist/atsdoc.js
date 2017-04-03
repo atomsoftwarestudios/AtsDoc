@@ -1,5 +1,28 @@
-/// <reference path="Scripts/typings/node/node.d.ts" />
+/* *************************************************************************
+The MIT License (MIT)
+Copyright (c)2016-2017 Atom Software Studios. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.
+**************************************************************************** */
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/// <reference path="Scripts/typings/node/node.d.ts" />
 const ts = require("typescript");
 const fs = require("fs");
 const nodepath = require("path");
@@ -302,42 +325,92 @@ var atsdoc;
         ts.SyntaxKind.ClassDeclaration,
         ts.SyntaxKind.CallSignature,
         ts.SyntaxKind.EnumMember
+        // ts.SyntaxKind.ImportEqualsDeclaration
     ];
     /* tslint:disable */
     /* tslint:enable */
     /**
      * Extracts jsDoc from ts.Node
      * First line of comment is used as short text, the rest is long text
-     * If multiple jsDocs exists the first one is used as primary and second is merged to lonf comment
-     * @param node
-     * @param atsNode
+     * If multiple jsDocs exists the first one is used as primary and second is merged to long comment
+     * @param node Node from which the documentation will be extracted
+     * @param atsNode Result node where the documentation should be stored
      */
     function extractJsDoc(node, atsNode) {
-        if (node.hasOwnProperty("jsDoc")) {
-            let jsDoc = node.jsDoc;
-            let jsDocComment = "";
-            // merge multiple jsDocs together first (correct way is not to use multiple jsDoc comments for single statement)
-            for (let jsDocNode of jsDoc) {
-                jsDocComment += jsDocNode.comment + "\n";
-            }
-            // populate comment properties of the atsNode with appropriate values
-            if (jsDocComment !== "") {
-                // only cr will be stored so replace crlf with cr only
-                jsDocComment = jsDocComment.replace(/\r/g, "");
-                // split jsDoc to short and long comments
-                let commentLines = jsDocComment.split("\n");
-                if (commentLines.length > 0) {
-                    atsNode.commentShort = commentLines[0];
-                    if (commentLines.length > 1) {
-                        commentLines.shift();
-                        let comment = commentLines.join("\n");
-                        if (comment !== "") {
-                            atsNode.commentLong = comment;
-                        }
+        if (!node.hasOwnProperty("jsDoc")) {
+            if (node.symbol) {
+                let comment = ts.displayPartsToString(node.symbol.getDocumentationComment()).split("\n");
+                if (comment instanceof Array && comment.length > 0) {
+                    if (comment[0]) {
+                        atsNode.commentShort = comment[0];
+                    }
+                    if (comment[1]) {
+                        comment.shift();
+                        atsNode.commentLong = comment.join("\n");
                     }
                 }
-                else {
-                    atsNode.commentShort = jsDocComment;
+            }
+            return;
+        }
+        let jsDoc = node.jsDoc;
+        let jsDocComment = "";
+        // merge multiple jsDocs together first (correct way is not to use multiple jsDoc comments for single statement)
+        for (let jsDocNode of jsDoc) {
+            if (jsDocNode.comment) {
+                jsDocComment += jsDocNode.comment + "\n";
+            }
+        }
+        // populate comment properties of the atsNode with appropriate values
+        if (jsDocComment !== "") {
+            // only cr will be stored so replace crlf with cr only
+            jsDocComment = jsDocComment.replace(/\r/g, "");
+            // split jsDoc to short and long comments
+            let commentLines = jsDocComment.split("\n");
+            if (commentLines.length > 0) {
+                atsNode.commentShort = commentLines[0];
+                if (commentLines.length > 1) {
+                    commentLines.shift();
+                    let comment = commentLines.join("\n");
+                    if (comment !== "") {
+                        atsNode.commentLong = comment;
+                    }
+                }
+            }
+            else {
+                atsNode.commentShort = jsDocComment;
+            }
+        }
+    }
+    /**
+     * Extracts parameters documentation from the parent node jsDoc tags of the node passed
+     * @param node The parameter node
+     * @param atsNode Result node where the documentation should be stored
+     */
+    function extractParamDoc(node, atsNode) {
+        if (!node.hasOwnProperty("name") ||
+            !node.hasOwnProperty("parent") ||
+            !node.parent.hasOwnProperty("jsDoc") ||
+            !(node.parent.jsDoc instanceof Array) ||
+            (node.parent.jsDoc.length === 0)) {
+            return;
+        }
+        let jsDocNode = node.parent.jsDoc[0];
+        if (!jsDocNode.hasOwnProperty("tags") || !(jsDocNode.tags instanceof Array) || jsDocNode.tags.length === 0) {
+            return;
+        }
+        let jsDocNodeTags = node.parent.jsDoc[0].tags;
+        for (const tag of jsDocNodeTags) {
+            if (tag.parameterName &&
+                tag.parameterName.text &&
+                tag.parameterName.text === node.name.getText() &&
+                tag.hasOwnProperty("comment")) {
+                let comment = tag.comment.split("\n");
+                if (comment[0]) {
+                    atsNode.commentShort = comment[0];
+                }
+                if (comment[1]) {
+                    comment.shift();
+                    atsNode.commentLong = comment.join("\n");
                 }
             }
         }
@@ -406,7 +479,7 @@ var atsdoc;
             }
         }
         else {
-            atsType.name = checker.typeToString(t);
+            atsType.name = t.getText();
         }
         // object flags
         if (t.objectFlags) {
@@ -472,6 +545,11 @@ var atsdoc;
      */
     function collectNodeData(node, atsNode) {
         let anyNode = node;
+        // kind
+        if (anyNode.kind) {
+            atsNode.kind = anyNode.kind;
+            atsNode.kindString = ts.SyntaxKind[anyNode.kind];
+        }
         // name
         if (anyNode.name) {
             atsNode.name = anyNode.name.getText();
@@ -498,10 +576,10 @@ var atsdoc;
             ts.forEachChild(anyNode, (n) => {
                 hasNestedNamespaces =
                     /* tslint:disable */
-                    hasNestedNamespaces || (n.flags && ((n.flags & ts.NodeFlags.NestedNamespace) === ts.NodeFlags.NestedNamespace));
+                    hasNestedNamespaces || (n.hasOwnProperty("flags") && ((n.flags & ts.NodeFlags.NestedNamespace) === ts.NodeFlags.NestedNamespace));
                 /* tslint:enable */
             });
-            if (anyNode.jsDoc && !hasNestedNamespaces) {
+            if (!hasNestedNamespaces) {
                 extractJsDoc(node, atsNode);
             }
         }
@@ -510,6 +588,20 @@ var atsdoc;
             atsNode.type = {};
             let t = checker.getTypeAtLocation(anyNode.type);
             collectTypes(t, atsNode.type, anyNode.type);
+            // if type is a return value, collect jsdoc from parent
+            if (atsNode.type &&
+                (anyNode.kind === ts.SyntaxKind.FunctionDeclaration ||
+                    anyNode.kind === ts.SyntaxKind.MethodDeclaration ||
+                    anyNode.kind === ts.SyntaxKind.MethodSignature)) {
+                if (anyNode.jsDoc && anyNode.jsDoc[0] && anyNode.jsDoc[0].tags) {
+                    for (const tag of anyNode.jsDoc[0].tags) {
+                        if (tag.tagName && tag.tagName.text === "returns") {
+                            atsNode.type.commentShort = tag.comment;
+                            break;
+                        }
+                    }
+                }
+            }
         }
         // flags
         if (anyNode.flags) {
@@ -564,12 +656,10 @@ var atsdoc;
             }
             for (let p of anyNode.members) {
                 let an = {};
-                an.kind = p.kind;
-                an.kindString = ts.SyntaxKind[p.kind];
+                collectNodeData(p, an);
                 if (p.questionToken) {
                     an.optional = true;
                 }
-                collectNodeData(p, an);
                 atsNode.children.push(an);
             }
         }
@@ -595,11 +685,13 @@ var atsdoc;
                 }
                 if (p.declarations instanceof Array) {
                     for (let decl of p.declarations) {
+                        extractParamDoc(decl, an);
                         collectNodeData(decl, an);
                         atsNode.parameters.push(an);
                     }
                 }
                 else {
+                    extractParamDoc(p, an);
                     collectNodeData(p, an);
                     atsNode.parameters.push(an);
                 }
@@ -612,7 +704,9 @@ var atsdoc;
         }
         // initializer
         if (anyNode.initializer) {
-            if (anyNode.kind === ts.SyntaxKind.EnumMember || anyNode.kind === ts.SyntaxKind.Parameter) {
+            if (anyNode.kind === ts.SyntaxKind.EnumMember ||
+                anyNode.kind === ts.SyntaxKind.Parameter ||
+                anyNode.kind === ts.SyntaxKind.VariableDeclaration) {
                 atsNode.initializer = anyNode.initializer.getText();
             }
         }
@@ -644,12 +738,17 @@ var atsdoc;
             let ps = anyNode.parent.getFullText();
             atsNode.atsNodeFlags = atsNode.atsNodeFlags || 0;
             /* tslint:disable */
-            if (ps.indexOf("let") !== -1)
+            if (ps.indexOf("let") !== -1) {
                 atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.let;
-            if (ps.indexOf("var") !== -1)
+                delete atsNode.initializer;
+            }
+            if (ps.indexOf("var") !== -1) {
                 atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.var;
+                delete atsNode.initializer;
+            }
             if (ps.indexOf("const") !== -1)
                 atsNode.atsNodeFlags = atsNode.atsNodeFlags | ATsDocNodeFlags.const;
+            /* tslint:denable */
         }
         if (atsNode.atsNodeFlags && atsNode.atsNodeFlags > 0) {
             atsNode.atsNodeFlagsString = [];
@@ -675,7 +774,7 @@ var atsdoc;
             kindString: ts.SyntaxKind[node.kind],
             files: []
         };
-        n.files.push(file.fileName + ":" + (pos.line + 1) + ":" + (pos.character + 1));
+        n.files.push({ file: file.fileName + ":" + (pos.line + 1) + ":" + (pos.character + 1) });
         return n;
     }
     /**
@@ -727,7 +826,7 @@ var atsdoc;
                 else {
                     if (key === "files") {
                         for (let file of node1.files) {
-                            node2.files.push(file);
+                            node2.files.push({ file: file.file });
                         }
                     }
                 }
@@ -905,7 +1004,7 @@ var atsdoc;
                         kindString: ts.SyntaxKind[sourceFile.kind],
                         files: []
                     };
-                    tsFile.files.push(sourceFile.fileName);
+                    tsFile.files.push({ file: sourceFile.fileName });
                     if (!(atsDocRootNode.children instanceof Array)) {
                         atsDocRootNode.children = [];
                     }
