@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>ATsDoc</Name>
     <RootNamespace>ATsDoc</RootNamespace>
-    <ScriptArguments>-t es6 ./test/doc/functions.ts</ScriptArguments>
+    <ScriptArguments>-t es6 ./test//classes/classes-static.ts --rootNodeName testName --rootNodeKind testKind</ScriptArguments>
     <NodeExePath>
     </NodeExePath>
   </PropertyGroup>

@@ -55,6 +55,10 @@ namespace atsdoc {
         logToConsole?: boolean;
         /** outout json file */
         jsonFile?: string;
+        /** renames root node name to the name passed from the console */
+        rootNodeName?: string;
+        /** sets the root node kind string to valie passed from console */
+        rootNodeKind?: string;
     }
 
     /**
@@ -120,20 +124,21 @@ namespace atsdoc {
      * Prints usage
      */
     function usage(): void {
-        log("Syntax: atsdoc [options] [file ...]");
+        log("Syntax: atsdoc [options] [file ...]|<-p projectPath>");
         log("");
         log("Examples: atsdoc hello.ts");
         log("          atsdoc --p ./tsproject/tsconfig.json");
-        log("          atsdoc --jsonFile file.json");
+        log("          atsdoc ./tsfiles/tsfile.ts --jsonFile file.json");
         log("");
         log("--help                                  Prints this help");
         log("--version                               Prints version");
         log("");
         log("TypeScript compiler options:");
         log("");
-        log("   All tsc (TypeScript compiler) options (run tsc --help for details) excluding the following options:");
+        log("   All tsc (TypeScript compiler) options (run tsc --help for details) excluding the output modification options (ignored)");
         log("");
 
+        /*
         for (let argument of tscIgnoredCommandLineArguments) {
             var desc: string = argument.description || "";
             log(
@@ -142,15 +147,18 @@ namespace atsdoc {
                 desc
             );
         }
+        */
 
         log("");
         log("ATsDoc configuration options:");
         log("");
-        log("   --includeDefinitionFiles             Includes definitions from definition files in use to the output");
+        log("   --includeDefinitionFiles                 Includes definitions from definition files in use to the output");
+        log("   --rootNodeName <name>                    Renames root node from 'program' to passed value");
+        log("   --rootNodeKind <program|library|module>  Sets kind of the root node to passed value");
         log("");
         log("Output & logging options:");
         log("");
-        log("   --jsonFile                           File to which the program structure should be written (default stdout)");
+        log("   --jsonFile                               File to which the program structure should be written (default stdout)");
         log("");
     }
 
@@ -442,6 +450,7 @@ namespace atsdoc {
     allowedNodes = [
         ts.SyntaxKind.ModuleDeclaration,
         ts.SyntaxKind.FunctionDeclaration,
+        ts.SyntaxKind.MethodDeclaration,
         ts.SyntaxKind.TypeParameter,
         ts.SyntaxKind.VariableDeclaration,
         ts.SyntaxKind.EnumDeclaration,
@@ -1256,6 +1265,14 @@ namespace atsdoc {
             kindString: "program"
         };
 
+        if (atsdocConfig.rootNodeKind) {
+            atsDocRootNode.kindString = atsdocConfig.rootNodeKind;
+        }
+
+        if (atsdocConfig.rootNodeName) {
+            atsDocRootNode.name = atsdocConfig.rootNodeName;
+        }
+
         // go through all configured files and visit each ts.node
         for (const sourceFile of program.getSourceFiles()) {
 
@@ -1345,6 +1362,18 @@ namespace atsdoc {
             cfg.jsonFile = null;
         }
 
+        if (config.rootNodeKind) {
+            cfg.rootNodeKind = config.rootNodeKind;
+        } else {
+            cfg.rootNodeKind = "Program";
+        }
+
+        if (config.rootNodeName) {
+            cfg.rootNodeName = config.rootNodeName;
+        } else {
+            cfg.rootNodeName = "Program";
+        }
+
         return cfg;
 
     }
@@ -1399,6 +1428,14 @@ namespace atsdoc {
                     return ReturnCode.Ok;
                 case "--jsonFile":
                     atsdocConfig.jsonFile = args[arg + 1];
+                    arg += 2;
+                    break;
+                case "--rootNodeName":
+                    atsdocConfig.rootNodeName = args[arg + 1];
+                    arg += 2;
+                    break;
+                case "--rootNodeKind":
+                    atsdocConfig.rootNodeKind = args[arg + 1];
                     arg += 2;
                     break;
 
