@@ -36,13 +36,14 @@ Currently, its not included to the NPM repository.
 Prior the AtsDoc will be published through the NPM the following procedure is about to be followed:
 
 clone the project and open in Visual Studio (this will ensure all required dependencies such as TSLint
-and TypeScript will be installed from NPM)
+and TypeScript will be installed from NPM).
+
+Build the solution.
 
 To run the code use the following command:
 ```
 node [path-to-vs-project-dir]\dist\atsdoc.js <params> <files|dir>
 ```
-
 RootPath parameter can be ommited when single file is used as the tsc output as .ts file nodes are not included in the output.
 
 **TypeScript Compiler Parameters**
