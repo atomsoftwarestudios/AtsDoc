@@ -31,6 +31,12 @@ namespace classes_inheritance {
         export class A {
         }
 
+        /**
+         * This is a short description of the B class
+         * This is a long description of the B class
+         */
+        export class B implements IA, IB {
+        }
     }
 
     import t = test;

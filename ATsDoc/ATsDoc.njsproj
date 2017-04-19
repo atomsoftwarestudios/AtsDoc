@@ -5,7 +5,7 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>ATsDoc</Name>
     <RootNamespace>ATsDoc</RootNamespace>
-    <ScriptArguments>-t es6 ./test/classes/classes-constructors.ts --m commonjs --rootNodeName testName --rootNodeKind testKind --rootPath ./test</ScriptArguments>
+    <ScriptArguments>-t es6 ./test/letvarconst/letvarconst.ts --m commonjs --rootNodeName testName --rootNodeKind testKind --rootPath ./test</ScriptArguments>
     <NodeExePath>
     </NodeExePath>
   </PropertyGroup>
@@ -15,7 +15,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>3003d3e9-881b-4a1a-a0e7-f9ccc86b721d</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>./dist/atsdoc.js</StartupFile>
+    <StartupFile>dist\atsdoc.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -91,7 +91,8 @@
     <None Include="test\types\types-basic.ts" />
     <TypeScriptCompile Include="test\classes\classes-constructors.ts" />
     <TypeScriptCompile Include="test\classes\classes-static.ts" />
-    <TypeScriptCompile Include="test\doc\functions.ts" />
+    <TypeScriptCompile Include="test\doc\doc.ts" />
+    <TypeScriptCompile Include="test\interfaces\interfaces.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="dist\" />

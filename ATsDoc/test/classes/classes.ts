@@ -34,6 +34,12 @@ namespace classes {
     }
 
     export abstract class Abstr {
+
+        /**
+         * Implement!
+         */
+        public abstract method();
+
     }
 
     export class A<T> {

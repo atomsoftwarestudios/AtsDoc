@@ -4,7 +4,7 @@
  */
 namespace classes_static {
 
-    class A {
+    export class A {
 
         public static a() {
             let t: string = "";

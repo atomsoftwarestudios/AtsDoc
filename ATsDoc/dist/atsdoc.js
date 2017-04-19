@@ -440,7 +440,7 @@ var atsdoc;
                 if (n.kind === ts.SyntaxKind.SourceFile && includeSources) {
                     if (n.fileName) {
                         let fn = nodepath.resolve(n.fileName).substr(atsdocConfig.rootPath.length).replace(/\\/g, "/");
-                        fqdn = fqdn === "" ? fn : fn + "/" + fqdn;
+                        fqdn = fqdn === "" ? fn : fn + "." + fqdn;
                     }
                 }
                 else {
@@ -762,7 +762,7 @@ var atsdoc;
         }
         // let, var or const
         if (anyNode.kind === ts.SyntaxKind.VariableStatement) {
-            let ps = anyNode.parent.getFullText();
+            let ps = anyNode.getFullText();
             atsNode.atsNodeFlags = atsNode.atsNodeFlags || 0;
             /* tslint:disable */
             if (ps.indexOf("let ") !== -1) {

@@ -585,7 +585,7 @@ namespace atsdoc {
                 if (n.kind === ts.SyntaxKind.SourceFile && includeSources) {
                     if (n.fileName) {
                         let fn: string = nodepath.resolve(n.fileName).substr(atsdocConfig.rootPath.length).replace(/\\/g, "/");
-                        fqdn = fqdn === "" ? fn : fn + "/" + fqdn;
+                        fqdn = fqdn === "" ? fn : fn + "." + fqdn;
                     }
                 } else {
                     if (n.symbol && n.symbol.name) {
@@ -961,7 +961,7 @@ namespace atsdoc {
         // let, var or const
 
         if (anyNode.kind === ts.SyntaxKind.VariableStatement) {
-            let ps: string = anyNode.parent.getFullText();
+            let ps: string = anyNode.getFullText();
             atsNode.atsNodeFlags = atsNode.atsNodeFlags || 0;
             /* tslint:disable */
             if (ps.indexOf("let ") !== -1) {
