@@ -23,7 +23,7 @@ Released under the MIT License
 ATsDoc is a Node.js command line utility designed to extract the TypeScript AST tree including the documentation to the JSON file consumable by the
 [AjsDoc](https://github.com/atomsoftwarestudios/AjsDoc/).
 
-The extractor isusing the TypeScript compiler API to extract the AST tree and is designed to be transparent to the TypeScript compiler and it should not be a problem to switch to new version of the compiler if there will not be any breaking changes in the API itself.
+The extractor is using the TypeScript compiler API to extract the AST tree and is designed to be transparent to the TypeScript compiler and it should not be a problem to switch to new version of the compiler if there will not be any breaking changes in the API itself.
 
 AtsDoc also uses the TSLint to warn against potential coding style problems.
 
@@ -36,13 +36,14 @@ Currently, its not included to the NPM repository.
 Prior the AtsDoc will be published through the NPM the following procedure is about to be followed:
 
 clone the project and open in Visual Studio (this will ensure all required dependencies such as TSLint
-and TypeScript will be installed from NPM)
+and TypeScript will be installed from NPM).
+
+Build the solution.
 
 To run the code use the following command:
 ```
 node [path-to-vs-project-dir]\dist\atsdoc.js <params> <files|dir>
 ```
-
 RootPath parameter can be ommited when single file is used as the tsc output as .ts file nodes are not included in the output.
 
 **TypeScript Compiler Parameters**
